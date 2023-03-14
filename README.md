@@ -1,5 +1,6 @@
 # Summary
-Searches matching GPOs in the given domain for those with XML matching a given string.
+Searches GPOs in the given domain for those which have names and contain XML matching a given string.  
+Useful to discover which GPOs implement a given setting.  
 
 # Requirements
 - Requires Powershell 7+, due to using the `ForEach-Object -Parallel` functionality.
