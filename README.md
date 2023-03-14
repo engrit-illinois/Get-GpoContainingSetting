@@ -8,14 +8,13 @@ Searches matching GPOs in the given domain for those with XML matching a given s
 1. Download `Get-GpoContainingSetting.psm1` to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).
 2. Run it using the examples and parameter documentation below.
 
-# Example output
-<img src='./example-output.png' />
-
 # Examples
 Search XML of all GPOs named like `ENGR*` for the string `*ews-banhammer*`:
 ```powershell
 Get-GpoContainingSetting -SettingQuery "*ews-banhammer*" -GpoNameQuery "ENGR*"
 ```
+
+<img src='./example-output.png' />
 
 # Parameters
 
