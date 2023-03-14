@@ -20,7 +20,7 @@ function Get-GpoContainingSetting {
 		for($i = 0; $i -lt $L; $i += 1) {
 			$indent = "    $indent"
 		}
-		$ts = Get-Date -Format "FileDateTime"
+		$ts = Get-Date -Format "HH:mm:ss"
 		Write-Host "[$ts]$($indent) $msg"
 	}
 	
@@ -59,14 +59,13 @@ function Get-GpoContainingSetting {
 		$gpo = $_
 		$report = Get-GPOReport -Guid $gpo.Id -ReportType "Xml"
 		if($report -like $SettingQuery) { 
-			log "`"$($gpo.DisplayName)" -L 2
-			$gpo.DisplayName
+			log $gpo.DisplayName -L 2
 		}
 	}
 	log "Done searching XML." -L 1
 	
 	$matchingGposCount = count $matchingGpos
-	log "Found $matchingGposCount GPOs with matching XML."
+	log "Found $matchingGposCount GPOs with matching XML." -L 1
 	
 	log "EOF"
 }
