@@ -14,4 +14,5 @@ WIP
 WIP
 
 # Notes
-- By mseng3. See my other projects here: https://github.com/mmseng/code-compendium.
+- Script originally by jbabiarz.
+- Rewritten by mseng3. See my other projects here: https://github.com/mmseng/code-compendium.
