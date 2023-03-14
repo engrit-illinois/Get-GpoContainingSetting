@@ -14,7 +14,7 @@ Searches matching GPOs in the given domain for those with XML matching a given s
 # Examples
 Search XML of all GPOs named like `ENGR*` for the string `*ews-banhammer*`:
 ```powershell
-Get-GpoContainingSetting -SettingQuery "*engr-service-account*" -GpoNameQuery "ENGR*"
+Get-GpoContainingSetting -SettingQuery "*ews-banhammer*" -GpoNameQuery "ENGR*"
 ```
 
 # Parameters
