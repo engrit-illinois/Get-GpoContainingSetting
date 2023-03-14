@@ -12,7 +12,7 @@ Searches matching GPOs in the given domain for those with XML matching a given s
 
 ### Search for GPOs named like `ENGR*` which implement the "Deny log on locally" setting
 ```powershell
-Get-GpoContainingSetting -SettingQuery "*ews-banhammer*" -GpoNameQuery "ENGR*"
+Get-GpoContainingSetting -SettingQuery "*SeDenyInteractiveLogonRight*" -GpoNameQuery "ENGR*"
 ```
 
 <img src='./example-output1.png' />
