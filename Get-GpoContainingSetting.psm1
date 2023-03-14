@@ -8,7 +8,7 @@ function Get-GpoContainingSetting {
 		[string]$Domain = "ad.uillinois.edu"
 	)
 	
-	function log($msg) {
+	function log {
 		param(
 			[string]$Msg,
 			[int]$L = 0
@@ -22,7 +22,9 @@ function Get-GpoContainingSetting {
 	}
 	
 	log "Importing Group Policy Management module..."
-	Import-Module grouppolicy 
+	if(-not (Get-Module "GroupPolicy")) {
+		Import-Module "GroupPolicy"
+	}
 	
 	log "Getting all the GPOs in domain: `"$Domain`" ..."
 	$allGpos = Get-GPO -All -Domain $Domain
