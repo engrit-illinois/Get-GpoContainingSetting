@@ -22,7 +22,7 @@ Get-GpoContainingSetting -SettingQuery "*engr-service-account*" -GpoNameQuery "E
 ### -SettingQuery \<string\>
 Required string.  
 The wildcard query to search for in each GPO's XML.  
-Note that specific settings are referred to in a GPO's XML using an internal name, and their friendly name (as shown in ADUC/GPMC) does not appear in the XML. For example the `DenyLogonLocally` setting is called `SeDenyInteractiveLogonRight` in the XML.  
+Note that specific settings are referred to in a GPO's XML using an internal name, and their friendly name (as shown in ADUC/GPMC) does not appear in the XML. For example the `Deny log on locally` setting is called `SeDenyInteractiveLogonRight` in the XML.  
 
 <img src='./xml.png' />
 
