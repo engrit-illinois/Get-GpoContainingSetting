@@ -17,9 +17,9 @@ Get-GpoContainingSetting -SettingQuery "*SeDenyInteractiveLogonRight*" -GpoNameQ
 
 <img src='./example-output1.png' />
 
-### Search for GPOs named like `ENGR*` which contain the string `*ews-banhammer*` in their XML
+### Silently search for GPOs named like `ENGR EWS*` which contain the string `*ews-banhammer*` in their XML, and return the entire GPO object
 ```powershell
-Get-GpoContainingSetting -SettingQuery "*ews-banhammer*" -GpoNameQuery "ENGR*"
+Get-GpoContainingSetting -SettingQuery "*ews-banhammer*" -GpoNameQuery "ENGR EWS*" -Quiet -PassThru -PassThruFull
 ```
 
 <img src='./example-output2.png' />
