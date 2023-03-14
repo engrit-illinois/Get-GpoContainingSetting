@@ -39,7 +39,7 @@ function Get-GpoContainingSetting {
 		$report = Get-GPOReport -Guid $gpo.Id -ReportType "Xml"
 		if($report -match $SettingQuery) { 
 			log "Found match: `"$($gpo.DisplayName)" -L 1
-			$($gpo.DisplayName
+			$gpo.DisplayName
 		}
 	}
 }
