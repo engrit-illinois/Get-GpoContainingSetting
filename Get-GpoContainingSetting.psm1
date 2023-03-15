@@ -4,11 +4,13 @@
 function Get-GpoContainingSetting {
 	param(
 		[Parameter(Mandatory=$true,Position=0)]
-		[string]$SettingQuery,
+		[string]$XmlQuery,
 		
-		[string]$GpoNameQuery = "*",
+		[string]$NameQuery = "*",
 		
-		[string]$Domain = "ad.uillinois.edu",
+		[string]$Domain,
+		
+		[string]$Server,
 		
 		[switch]$Quiet,
 		
@@ -97,29 +99,34 @@ function Get-GpoContainingSetting {
 	}
 	
 	function Get-AllGpos {
-		log "Getting all the GPOs in domain: `"$Domain`" ..."
-		$gpos = Get-GPO -All -Domain $Domain
+		log "Getting all GPOs in the domain..."
+		$params = @{}
+		if($Domain) { $params.Domain = $Domain }
+		if($Server) { $params.Server = $Server }
+		$gpos = Get-GPO -All @params
 		$gposCount = count $gpos
 		log "Found $gposCount GPOs." -L 1
 		$gpos
 	}
 	
 	function Get-FilteredGpos($gpos) {
-		log "Filtering GPOs by given value of -GpoNameQuery: `"$GpoNameQuery`"..."
-		$filteredGpos = $gpos | Where { $_.DisplayName -like $GpoNameQuery }
+		log "Filtering GPOs by given value of -NameQuery: `"$NameQuery`"..."
+		$filteredGpos = $gpos | Where { $_.DisplayName -like $NameQuery }
 		$filteredGposCount = count $filteredGpos
 		log "Found $filteredGposCount GPOs with matching names." -L 1
 		$filteredGpos
 	}
 	
 	function Get-MatchingGpos($filteredGpos) {
-		log "Searching XML in filtered GPOs..."
+		log "Filtering GPOs by given value of -XmlQuery: `"$XmlQuery`"..."
 		log "Matches:" -L 1
 		$logfunction = ${function:log}.ToString()
 		$matchingGpos = $filteredGpos | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel {
-			$SettingQuery = $using:SettingQuery
+			$XmlQuery = $using:XmlQuery
 			$Quiet = $using:Quiet
 			$Verbosity = $using:Verbosity
+			$Domain = $using:Domain
+			$Server = $using:Server
 			${function:log} = $using:logfunction
 			
 			$gpo = $_
@@ -127,8 +134,16 @@ function Get-GpoContainingSetting {
 			$id = $gpo.Id
 			$err = "unknown"
 			log "Processing GPO: `"$name`" (`"$id`")..." -L 2 -V 1 -Debug
+			
+			$params = @{
+				Guid = $id
+				ReportType = "Xml"
+				ErrorAction = "Stop"
+			}
+			if($Domain) { $params.Domain = $Domain }
+			if($Server) { $params.Server = $Server }
 			try {
-				$report = Get-GPOReport -Guid $id -ReportType "Xml" -ErrorAction "Stop"
+				$report = Get-GPOReport @params
 			}
 			catch {
 				$err = $_.Exception.Message
@@ -144,7 +159,7 @@ function Get-GpoContainingSetting {
 				log $errString -Raw -Err
 			}
 			else {
-				if($report -like $SettingQuery) { 
+				if($report -like $XmlQuery) { 
 					log "$name" -L 2 -Match
 					$gpo
 				}
@@ -169,16 +184,25 @@ function Get-GpoContainingSetting {
 		}
 	}
 	
+	function Get-Runtime($startTime) {
+		$endTime = Get-Date
+		$runtime = $endTime - $startTime
+		log "Runtime: $runtime"
+	}
+	
 	function Do-Stuff {
+		$startTime = Get-Date
 		if(Import-Gpmc) {
 			$gpos = Get-AllGpos
 			$filteredGpos = Get-FilteredGpos $gpos | Sort "DisplayName"
 			$matchingGpos = Get-MatchingGpos $filteredGpos
 			if($PassThru) {
-				Return-Gpos $matchingGpos
+				$returnObject = Return-Gpos $matchingGpos
 			}
 		}
+		Get-Runtime $startTime
 		log "EOF"
+		$returnObject
 	}
 	
 	Do-Stuff
