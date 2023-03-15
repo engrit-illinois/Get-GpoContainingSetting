@@ -13,14 +13,14 @@ Useful to discover which GPOs implement a given setting.
 
 ### Search for GPOs named like `ENGR*` which implement the "Deny log on locally" setting
 ```powershell
-Get-GpoContainingSetting -SettingQuery "*SeDenyInteractiveLogonRight*" -GpoNameQuery "ENGR*"
+Get-GpoContainingSetting -NameQuery "ENGR*" -XmlQuery "*SeDenyInteractiveLogonRight*"
 ```
 
 <img src='./example-output1.png' />
 
 ### Silently search for GPOs named like `ENGR EWS*` which contain the string `*ews-banhammer*` in their XML, and return the entire GPO object
 ```powershell
-Get-GpoContainingSetting -SettingQuery "*ews-banhammer*" -GpoNameQuery "ENGR EWS*" -Quiet -PassThru -PassThruFull
+Get-GpoContainingSetting -NameQuery "ENGR EWS*" -XmlQuery "*ews-banhammer*"  -Quiet -PassThru -PassThruFull
 ```
 
 <img src='./example-output2.png' />
@@ -38,7 +38,7 @@ Note that specific settings are referred to in a GPO's XML using an internal nam
 Optional string.  
 The wildcard query used to filter all retrieved GPOs before searching through their XML.  
 Default is `*` (i.e. all GPOs in the domain).  
-Note: it's highly recommended to filter GPOs as much as possible to reduce runtime. The search may take on the order of ~20 minutes when filtered down to ~1000 GPOs.  
+Note: it's highly recommended to filter GPOs as much as possible to reduce runtime. Expect a search of ~1000 name-matched GPOs to take on the order of ~20 minutes.  
 
 ### -Domain \<string\>
 Optional string.  
