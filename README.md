@@ -1,6 +1,8 @@
 # Summary
-Searches GPOs in the given domain for those which have names and contain XML matching a given string.  
+Searches GPOs in the given domain and returns those which have names matching a given string, and which contain XML matching a given string.  
 Useful to discover which GPOs implement a given setting.  
+Despite the name of the module, it will search ALL of the XML of every name-matched GPO, so you can search for anything that is stored in the GPOs' XML, not just setting names.  
+This also means that it will take a while to export and search all the XML, so you should make sure to confine the search by GPO name as much as possible.  
 
 # Requirements
 - Requires Powershell 7+, due to using the `ForEach-Object -Parallel` functionality.
