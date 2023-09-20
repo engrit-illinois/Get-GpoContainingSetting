@@ -41,7 +41,7 @@ Get-GpoContainingSetting -NameQuery "ENGR*" -ReportType "HTML" -TextQuery "*Extr
 ### -TextQuery \<string\>
 Required string.  
 The wildcard query to search for in each GPO's .  
-Note that specific settings are referred to in a GPO's XML using an internal name, and their friendly name (as shown in ADUC/GPMC) does not appear in the XML. For example the `Deny log on locally` setting is called `SeDenyInteractiveLogonRight` in the XML. If you're unsure what to search for, you can try using `-ReportType "HTML"`.  
+Note that specific settings are referred to in a GPO's XML using an internal name, and their friendly name (as shown in ADUC/GPMC) does not appear in the XML. For example the `Deny log on locally` setting is called `SeDenyInteractiveLogonRight` in the XML. If you're unsure what to search for, you can try using `-ReportType "HTML"` instead.  
 
 <img src='./xml.png' />
 
