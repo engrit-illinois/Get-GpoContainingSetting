@@ -1,8 +1,8 @@
 # Summary
-Searches GPOs in the given domain and returns those which have names matching a given string, and which contain XML matching a given string.  
+Searches GPOs in the given domain and returns those which have names matching a given string, and which contain text in their XML or HTML exports matching a given string.  
 Useful to discover which GPOs implement a given setting.  
-Despite the name of the module, it will search ALL of the XML of every name-matched GPO, so you can search for anything that is stored in the GPOs' XML, not just setting names.  
-This also means that it will take a while to export and search all the XML, so you should make sure to confine the search by GPO name as much as possible.  
+Despite the name of the module, it will search ALL of the XML/HTML of every name-matched GPO, so you can search for anything that is stored in the GPOs' XML, not just setting names.  
+This also means that it will take a while to export and search all the XML/HTML, so you should make sure to confine the search by GPO name as much as possible.  
 
 # Requirements
 - Requires Powershell 7+, due to using the `ForEach-Object -Parallel` functionality.
@@ -40,14 +40,14 @@ Get-GpoContainingSetting -NameQuery "ENGR*" -ReportType "HTML" -TextQuery "*Extr
 
 ### -TextQuery \<string\>
 Required string.  
-The wildcard query to search for in each GPO's XML.  
-Note that specific settings are referred to in a GPO's XML using an internal name, and their friendly name (as shown in ADUC/GPMC) does not appear in the XML. For example the `Deny log on locally` setting is called `SeDenyInteractiveLogonRight` in the XML.  
+The wildcard query to search for in each GPO's .  
+Note that specific settings are referred to in a GPO's XML using an internal name, and their friendly name (as shown in ADUC/GPMC) does not appear in the XML. For example the `Deny log on locally` setting is called `SeDenyInteractiveLogonRight` in the XML. If you're unsure what to search for, you can try using `-ReportType "HTML"`.  
 
 <img src='./xml.png' />
 
 ### -NameQuery \<string\>
 Optional string.  
-The wildcard query used to filter all retrieved GPOs before searching through their XML.  
+The wildcard query used to filter all retrieved GPOs before searching through their XML/HTML.  
 Default is `*` (i.e. all GPOs in the domain).  
 Note: it's highly recommended to filter GPOs as much as possible to reduce runtime. Expect a search of ~1000 name-matched GPOs to take on the order of ~20 minutes.  
 
@@ -69,7 +69,7 @@ From the [Get-GPO](https://learn.microsoft.com/en-us/powershell/module/grouppoli
 
 ### -ThrottleLimit \<int\>
 Optional integer.  
-The number of GPO XML reports to asynchronously request and process simultaneously.  
+The number of GPO XML/HTML reports to asynchronously request and process simultaneously.  
 Default is `10`.  
 Use extreme caution setting this value any higher. It can speed up the results, but going too high can result in the DC failing to respond with GPO report data. In this case the module will throw an error, but will continue processing further GPOs, so you will likely end up missing a lot of data, and thus the results will be incomplete and mostly worthless.  
 Using the default value of `10`, expect a search of ~1000 name-matched GPOs to take on the order of ~20 minutes.  
