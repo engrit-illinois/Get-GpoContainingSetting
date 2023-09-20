@@ -94,5 +94,5 @@ Optional integer.
 Set to 1 or higher to output some additional information during each operation.  
 
 # Notes
-- Script originally by jbabiarz.
+- Script concept originally by jbabiarz.
 - Rewritten by mseng3. See my other projects here: https://github.com/mmseng/code-compendium.
