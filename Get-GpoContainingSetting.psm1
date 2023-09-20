@@ -4,9 +4,11 @@
 function Get-GpoContainingSetting {
 	param(
 		[Parameter(Mandatory=$true,Position=0)]
-		[string]$XmlQuery,
+		[string]$TextQuery,
 		
 		[string]$NameQuery = "*",
+		
+		[string]$ReportType = "XML",
 		
 		[string]$Domain,
 		
@@ -118,11 +120,12 @@ function Get-GpoContainingSetting {
 	}
 	
 	function Get-MatchingGpos($filteredGpos) {
-		log "Filtering GPOs by given value of -XmlQuery: `"$XmlQuery`"..."
+		log "Filtering GPOs by given value of -TextQuery: `"$TextQuery`"..."
 		log "Matches:" -L 1
 		$logfunction = ${function:log}.ToString()
 		$matchingGpos = $filteredGpos | ForEach-Object -ThrottleLimit $ThrottleLimit -Parallel {
-			$XmlQuery = $using:XmlQuery
+			$TextQuery = $using:TextQuery
+			$ReportType = $using:ReportType
 			$Quiet = $using:Quiet
 			$Verbosity = $using:Verbosity
 			$Domain = $using:Domain
@@ -137,7 +140,7 @@ function Get-GpoContainingSetting {
 			
 			$params = @{
 				Guid = $id
-				ReportType = "Xml"
+				ReportType = $ReportType
 				ErrorAction = "Stop"
 			}
 			if($Domain) { $params.Domain = $Domain }
@@ -159,16 +162,16 @@ function Get-GpoContainingSetting {
 				log $errString -Raw -Err
 			}
 			else {
-				if($report -like $XmlQuery) { 
+				if($report -like $TextQuery) { 
 					log "$name" -L 2 -Match
 					$gpo
 				}
 			}
 		}
-		log "Done searching XML." -L 1
+		log "Done filtering GPOs." -L 1
 		
 		$matchingGposCount = count $matchingGpos
-		log "Found $matchingGposCount GPOs with matching XML." -L 1
+		log "Found $matchingGposCount GPOs with matching text." -L 1
 		
 		$matchingGpos
 	}

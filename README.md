@@ -15,21 +15,30 @@ This also means that it will take a while to export and search all the XML, so y
 
 ### Search for GPOs named like `ENGR*` which implement the "Deny log on locally" setting
 ```powershell
-Get-GpoContainingSetting -NameQuery "ENGR*" -XmlQuery "*SeDenyInteractiveLogonRight*"
+Get-GpoContainingSetting -NameQuery "ENGR*" -TextQuery "*SeDenyInteractiveLogonRight*"
 ```
 
 <img src='./example-output1.png' />
 
 ### Silently search for GPOs named like `ENGR EWS*` which contain the string `*ews-banhammer*` in their XML, and return the entire GPO object
 ```powershell
-Get-GpoContainingSetting -NameQuery "ENGR EWS*" -XmlQuery "*ews-banhammer*"  -Quiet -PassThru -PassThruFull
+Get-GpoContainingSetting -NameQuery "ENGR EWS*" -TextQuery "*ews-banhammer*"  -Quiet -PassThru -PassThruFull
 ```
 
 <img src='./example-output2.png' />
 
+### Search for GPOs with registry-based settings orphaned by ADMX template updates
+Orphaned registry-based settings can be identified because in the HTML version of the export, they show up under a special section named `Extra Registry Settings`.  
+For identifying other issues with GPOs, see [Audit-MisconfiguredGpos](https://github.com/engrit-illinois/Audit-MisconfiguredGpos).  
+```powershell
+Get-GpoContainingSetting -NameQuery "ENGR*" -ReportType "HTML" -TextQuery "*Extra Registry Settings*"
+```
+
+<img src='./example-output3.png' />
+
 # Parameters
 
-### -XmlQuery \<string\>
+### -TextQuery \<string\>
 Required string.  
 The wildcard query to search for in each GPO's XML.  
 Note that specific settings are referred to in a GPO's XML using an internal name, and their friendly name (as shown in ADUC/GPMC) does not appear in the XML. For example the `Deny log on locally` setting is called `SeDenyInteractiveLogonRight` in the XML.  
@@ -41,6 +50,12 @@ Optional string.
 The wildcard query used to filter all retrieved GPOs before searching through their XML.  
 Default is `*` (i.e. all GPOs in the domain).  
 Note: it's highly recommended to filter GPOs as much as possible to reduce runtime. Expect a search of ~1000 name-matched GPOs to take on the order of ~20 minutes.  
+
+### -ReportType \<"XML" | "HTML"\>
+Optional string with value of `XML` or `HTML`.  
+Whether to export GPO reports as XML or HTML before searching through them.  
+For most circumstances `XML` is recommended, however `HTML` can be useful for identifying which GPOs have orhpaned settings, which do not appear any differently in XML, but _do_ appear differently in the HTML render.  
+Default is `XML`.  
 
 ### -Domain \<string\>
 Optional string.  
